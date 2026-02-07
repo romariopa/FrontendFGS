@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import SimulatorPage from "@/app/simulator/page";
 import { simulatorService } from "@/services/simulatorService";
+import { I18nProvider } from "@/i18n/I18nContext";
 
 // Mock simulatorService
 jest.mock("@/services/simulatorService", () => ({
@@ -15,7 +16,11 @@ describe("SimulatorPage", () => {
   });
 
   it("renders simulator form", () => {
-    render(<SimulatorPage />);
+    render(
+      <I18nProvider>
+        <SimulatorPage />
+      </I18nProvider>
+    );
     expect(screen.getByText("Simulador de Ahorro")).toBeInTheDocument();
     expect(screen.getByLabelText("Monto Inicial")).toBeInTheDocument();
     expect(screen.getByLabelText("Aporte Mensual")).toBeInTheDocument();
@@ -29,8 +34,12 @@ describe("SimulatorPage", () => {
       totalInterest: 66000,
       finalBalance: 2266000,
     });
-
-    render(<SimulatorPage />);
+    
+    render(
+      <I18nProvider>
+        <SimulatorPage />
+      </I18nProvider>
+    );
 
     const initialInput = screen.getByLabelText("Monto Inicial");
     const monthlyInput = screen.getByLabelText("Aporte Mensual");
@@ -58,8 +67,12 @@ describe("SimulatorPage", () => {
   });
 
 
-  it("disables button for invalid input", () => {
-    render(<SimulatorPage />);
+  it("disables button for invalid input", async () => {
+    render(
+      <I18nProvider>
+        <SimulatorPage />
+      </I18nProvider>
+    );
     
     const monthsInput = screen.getByLabelText("Plazo (Meses)");
     fireEvent.change(monthsInput, { target: { value: "500" } }); // Invalid > 360

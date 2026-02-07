@@ -38,4 +38,16 @@ describe("Button", () => {
     expect(button).toBeDisabled();
     expect(button).toHaveClass("disabled:opacity-50");
   });
+
+  it("renders as child element when asChild is true", () => {
+    render(
+      <Button asChild>
+        <a href="/link">Link Button</a>
+      </Button>
+    );
+    const link = screen.getByRole("link", { name: /link button/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/link");
+    expect(link).toHaveClass("inline-flex");
+  });
 });

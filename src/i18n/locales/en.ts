@@ -52,7 +52,11 @@ export const en: Translations = {
     totalContributed: "Total Contributed",
     interestEarned: "Interest Earned",
     finalBalance: "Estimated Final Balance",
-    disclaimer: "* This projection is approximate and does not guarantee future profitability. Rate used: 6% E.A."
+    disclaimer: "* This projection is approximate and does not guarantee future profitability. Rate used: 6% E.A.",
+    errorNegative: "Cannot be negative",
+    errorMonthsRange: "Between 1 and 360 months",
+    errorCalculation: "Error calculating simulation. Please try again.",
+    monthsUnit: "months"
   },
   products: {
     pageTitle: "Our Products",

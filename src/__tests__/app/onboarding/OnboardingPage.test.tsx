@@ -1,16 +1,28 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import OnboardingPage from "@/app/onboarding/page";
 import { submissionService } from "@/services/submissionService";
+import { forwardRef, useImperativeHandle } from "react";
 
-// Mock react-google-recaptcha
+// Mock react-google-recaptcha with ref support
 jest.mock("react-google-recaptcha", () => {
+  const { forwardRef, useImperativeHandle } = jest.requireActual("react");
   return {
     __esModule: true,
-    default: ({ onChange }: { onChange: (token: string) => void }) => (
-      <button onClick={() => onChange("TEST-TOKEN")} aria-label="Recaptcha Mock">
-        Recaptcha Mock
-      </button>
-    ),
+    default: forwardRef(({ onChange }: { onChange: (token: string | null) => void }, ref: any) => {
+      useImperativeHandle(ref, () => ({
+        reset: jest.fn(),
+      }));
+      return (
+        <div>
+          <button onClick={() => onChange("TEST-TOKEN")} aria-label="Recaptcha Valid">
+            Recaptcha Valid
+          </button>
+          <button onClick={() => onChange(null)} aria-label="Recaptcha Null">
+            Recaptcha Null
+          </button>
+        </div>
+      );
+    }),
   };
 });
 
@@ -48,7 +60,7 @@ describe("OnboardingPage", () => {
     expect(submitBtn).toBeDisabled();
 
     // Complete recaptcha
-    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
     fireEvent.click(recaptchaButton);
     
     expect(submitBtn).not.toBeDisabled();
@@ -65,7 +77,7 @@ describe("OnboardingPage", () => {
     fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
     
     // Check recaptcha (mocked as a button)
-    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
     fireEvent.click(recaptchaButton);
 
     const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
@@ -94,7 +106,7 @@ describe("OnboardingPage", () => {
     fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
     fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
     
-    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
     fireEvent.click(recaptchaButton);
 
     const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
@@ -105,8 +117,8 @@ describe("OnboardingPage", () => {
     });
   });
 
-  it("handles unexpected exception", async () => {
-    (submissionService.submit as jest.Mock).mockRejectedValue("Unexpected String Error");
+  it("handles generic error fallback", async () => {
+    (submissionService.submit as jest.Mock).mockResolvedValue({ success: false }); // No error message
 
     render(<OnboardingPage />);
 
@@ -115,7 +127,61 @@ describe("OnboardingPage", () => {
     fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
     fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
     
-    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
+    fireEvent.click(recaptchaButton);
+
+    const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      // Assuming t.onboarding.errorGeneric maps to a string in tests
+      // Since we use real I18nContext, it should be "Error al procesar la solicitud." from es.ts
+      expect(screen.getByText("Error al procesar la solicitud.")).toBeInTheDocument();
+    });
+  });
+
+  it("handles null recaptcha token", () => {
+    render(<OnboardingPage />);
+    const recaptchaButton = screen.getByLabelText("Recaptcha Null");
+    fireEvent.click(recaptchaButton);
+    
+    // Form should be invalid if token is null
+    const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
+    expect(submitBtn).toBeDisabled();
+  });
+
+  it("handles unexpected errors during submission", async () => {
+    (submissionService.submit as jest.Mock).mockRejectedValue(new Error("Unexpected Error"));
+
+    render(<OnboardingPage />);
+
+    // Fill all fields
+    fireEvent.change(screen.getByLabelText("Nombre Completo"), { target: { value: "John Doe" } });
+    fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
+    fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
+    
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
+    fireEvent.click(recaptchaButton);
+
+    const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText("Unexpected Error")).toBeInTheDocument();
+    });
+  });
+
+  it("handles non-Error objects during submission", async () => {
+    (submissionService.submit as jest.Mock).mockRejectedValue("String Error");
+
+    render(<OnboardingPage />);
+
+    // Fill all fields
+    fireEvent.change(screen.getByLabelText("Nombre Completo"), { target: { value: "John Doe" } });
+    fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
+    fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
+    
+    const recaptchaButton = screen.getByLabelText("Recaptcha Valid");
     fireEvent.click(recaptchaButton);
 
     const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
@@ -123,27 +189,6 @@ describe("OnboardingPage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Ocurrió un error inesperado.")).toBeInTheDocument();
-    });
-  });
-
-  it("handles standard exception", async () => {
-    (submissionService.submit as jest.Mock).mockRejectedValue(new Error("Network Error"));
-
-    render(<OnboardingPage />);
-
-    // Fill all fields
-    fireEvent.change(screen.getByLabelText("Nombre Completo"), { target: { value: "John Doe" } });
-    fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
-    fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
-    
-    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
-    fireEvent.click(recaptchaButton);
-
-    const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
-    fireEvent.click(submitBtn);
-
-    await waitFor(() => {
-      expect(screen.getByText("Network Error")).toBeInTheDocument();
     });
   });
 });

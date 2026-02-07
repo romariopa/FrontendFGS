@@ -70,7 +70,7 @@ export default function SimulatorPage() {
                 max={360}
               />
               <p className="text-xs text-gray-500 mt-1 text-right">
-                {values.months ? `${values.months} meses` : "0 meses"}
+                {values.months ? `${values.months} ${t.simulator.monthsUnit}` : `0 ${t.simulator.monthsUnit}`}
               </p>
             </div>
 

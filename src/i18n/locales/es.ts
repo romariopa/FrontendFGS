@@ -50,7 +50,11 @@ export const es = {
     totalContributed: "Total Aportado",
     interestEarned: "Intereses Ganados",
     finalBalance: "Saldo Final Estimado",
-    disclaimer: "* Esta proyección es aproximada y no garantiza rentabilidad futura. Tasa usada: 6% E.A."
+    disclaimer: "* Esta proyección es aproximada y no garantiza rentabilidad futura. Tasa usada: 6% E.A.",
+    errorNegative: "No puede ser negativo",
+    errorMonthsRange: "Entre 1 y 360 meses",
+    errorCalculation: "Error al calcular la simulación. Por favor intente nuevamente.",
+    monthsUnit: "meses"
   },
   products: {
     pageTitle: "Nuestros Productos",

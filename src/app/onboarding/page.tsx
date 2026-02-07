@@ -69,7 +69,6 @@ export default function OnboardingPage() {
       email: "",
       recaptchaToken: "",
     });
-    recaptchaRef.current?.reset();
     setStatus("idle");
     setRequestId("");
   };

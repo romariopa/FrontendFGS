@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { simulatorService } from "@/services/simulatorService";
+import { useI18n } from "@/i18n/I18nContext";
 
 interface SimulationResult {
   totalContributed: number;
@@ -20,6 +21,7 @@ interface ValidationErrors {
 }
 
 export function useSimulator() {
+  const { t } = useI18n();
   const [values, setValues] = useState<SimulatorState>({
     initialAmount: "",
     monthlyContribution: "",
@@ -37,16 +39,16 @@ export function useSimulator() {
 
     // Check negatives
     if (values.initialAmount !== "" && values.initialAmount < 0) {
-      newErrors.initialAmount = "No puede ser negativo";
+      newErrors.initialAmount = t.simulator.errorNegative;
       valid = false;
     }
     if (values.monthlyContribution !== "" && values.monthlyContribution < 0) {
-      newErrors.monthlyContribution = "No puede ser negativo";
+      newErrors.monthlyContribution = t.simulator.errorNegative;
       valid = false;
     }
     // Check range
     if (values.months !== "" && (values.months < 1 || values.months > 360)) {
-      newErrors.months = "Entre 1 y 360 meses";
+      newErrors.months = t.simulator.errorMonthsRange;
       valid = false;
     }
     
@@ -61,7 +63,7 @@ export function useSimulator() {
     }
 
     return { errors: newErrors, isValid: valid };
-  }, [values]);
+  }, [values, t]);
 
   const { errors, isValid } = validationState;
 
@@ -83,12 +85,12 @@ export function useSimulator() {
       setResult(data);
     } catch (err) {
       console.error(err);
-      setError("Error al calcular la simulación. Por favor intente nuevamente.");
+      setError(t.simulator.errorCalculation);
       setResult(null);
     } finally {
       setIsLoading(false);
     }
-  }, [values, isValid]);
+  }, [values, isValid, t]);
 
   const setField = (field: keyof SimulatorState, value: string) => {
     const numValue = value === "" ? "" : Number(value);

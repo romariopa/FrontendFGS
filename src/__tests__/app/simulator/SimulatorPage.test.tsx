@@ -1,7 +1,19 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import SimulatorPage from "@/app/simulator/page";
+import { simulatorService } from "@/services/simulatorService";
+
+// Mock simulatorService
+jest.mock("@/services/simulatorService", () => ({
+  simulatorService: {
+    calculate: jest.fn(),
+  },
+}));
 
 describe("SimulatorPage", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("renders simulator form", () => {
     render(<SimulatorPage />);
     expect(screen.getByText("Simulador de Ahorro")).toBeInTheDocument();
@@ -10,7 +22,14 @@ describe("SimulatorPage", () => {
     expect(screen.getByLabelText("Plazo (Meses)")).toBeInTheDocument();
   });
 
-  it("calculates results when form is valid", () => {
+  it("calculates results when form is valid", async () => {
+    // Mock successful response
+    (simulatorService.calculate as jest.Mock).mockResolvedValue({
+      totalContributed: 2200000,
+      totalInterest: 66000,
+      finalBalance: 2266000,
+    });
+
     render(<SimulatorPage />);
 
     const initialInput = screen.getByLabelText("Monto Inicial");
@@ -30,11 +49,14 @@ describe("SimulatorPage", () => {
     fireEvent.click(button);
 
     // Results should appear
-    expect(screen.getByText("Resultado de tu Simulación")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Resultado de tu Simulación")).toBeInTheDocument();
+    });
+    
     expect(screen.getByText("Total Aportado")).toBeInTheDocument();
-    // Check for some formatted values roughly (exact formatting depends on locale in test env)
-    // We check if result section is visible
+    expect(screen.getByText("$ 2.200.000")).toBeInTheDocument();
   });
+
 
   it("disables button for invalid input", () => {
     render(<SimulatorPage />);

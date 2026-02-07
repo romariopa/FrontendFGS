@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex justify-between items-start">
           <CardTitle className="text-xl text-blue-900">{product.name}</CardTitle>
           <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 capitalize">
-            {product.type}
+            {t.products[`type${product.type.charAt(0).toUpperCase() + product.type.slice(1)}` as keyof typeof t.products] || product.type}
           </span>
         </div>
         <CardDescription>{product.description}</CardDescription>

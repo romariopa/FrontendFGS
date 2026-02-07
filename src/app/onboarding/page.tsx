@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { submissionService, OnboardingData } from "@/services/submissionService";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
-import { CheckCircle, AlertCircle, ShieldCheck } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react";
 import { useI18n } from "@/i18n/I18nContext";
 
 export default function OnboardingPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formData, setFormData] = useState<OnboardingData>({
     fullName: "",
     document: "",
@@ -21,7 +23,6 @@ export default function OnboardingPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [requestId, setRequestId] = useState("");
-  const [isHuman, setIsHuman] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ export default function OnboardingPage() {
 
     try {
       // Validate Recaptcha
-      if (formData.recaptchaToken !== "OK") {
+      if (!formData.recaptchaToken) {
         throw new Error(t.onboarding.errorRobot);
       }
 
@@ -52,11 +53,10 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleRecaptcha = (checked: boolean) => {
-    setIsHuman(checked);
+  const handleRecaptchaChange = (token: string | null) => {
     setFormData((prev) => ({
       ...prev,
-      recaptchaToken: checked ? "OK" : "",
+      recaptchaToken: token || "",
     }));
   };
 
@@ -67,7 +67,7 @@ export default function OnboardingPage() {
       email: "",
       recaptchaToken: "",
     });
-    setIsHuman(false);
+    recaptchaRef.current?.reset();
     setStatus("idle");
     setRequestId("");
   };
@@ -146,22 +146,14 @@ export default function OnboardingPage() {
                 disabled={status === "loading"}
               />
 
-              {/* Recaptcha Simulado */}
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  id="recaptcha"
-                  className="h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                  checked={isHuman}
-                  onChange={(e) => handleRecaptcha(e.target.checked)}
-                  disabled={status === "loading"}
+              {/* Google reCAPTCHA */}
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                  onChange={handleRecaptchaChange}
+                  hl={locale}
                 />
-                <label htmlFor="recaptcha" className="text-sm text-gray-700 font-medium cursor-pointer flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-blue-600" />
-                  {t.onboarding.recaptcha}
-                </label>
-                {/* Campo oculto real */}
-                <input type="hidden" name="recaptchaToken" value={formData.recaptchaToken} />
               </div>
             </div>
 

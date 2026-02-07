@@ -18,7 +18,7 @@ export const submissionService = {
     // Simular latencia
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    if (data.recaptchaToken !== "OK") {
+    if (!data.recaptchaToken) {
       return { success: false, error: "Validación de seguridad fallida." };
     }
 

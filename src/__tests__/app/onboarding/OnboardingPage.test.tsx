@@ -2,6 +2,18 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import OnboardingPage from "@/app/onboarding/page";
 import { submissionService } from "@/services/submissionService";
 
+// Mock react-google-recaptcha
+jest.mock("react-google-recaptcha", () => {
+  return {
+    __esModule: true,
+    default: ({ onChange }: { onChange: (token: string) => void }) => (
+      <button onClick={() => onChange("TEST-TOKEN")} aria-label="Recaptcha Mock">
+        Recaptcha Mock
+      </button>
+    ),
+  };
+});
+
 // Mock the service
 jest.mock("@/services/submissionService", () => ({
   submissionService: {
@@ -47,9 +59,9 @@ describe("OnboardingPage", () => {
     fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
     fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
     
-    // Check recaptcha (mocked as a checkbox in the UI)
-    const recaptchaCheckbox = screen.getByLabelText(/No soy un robot/i);
-    fireEvent.click(recaptchaCheckbox);
+    // Check recaptcha (mocked as a button)
+    const recaptchaButton = screen.getByLabelText("Recaptcha Mock");
+    fireEvent.click(recaptchaButton);
 
     const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
     fireEvent.click(submitBtn);

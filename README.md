@@ -27,7 +27,7 @@ Crea un archivo `.env.local` en la raíz del proyecto `frontend/` y define las s
 # URL base de la API del Backend (Asegúrate que coincida con el puerto del backend)
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
-# Clave de Sitio de Google reCAPTCHA (v2)
+# Clave de Sitio de Google reCAPTCHA (v2) esta es publica de google para pruebas
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
 ```
 

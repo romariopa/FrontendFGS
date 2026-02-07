@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { simulatorService } from "@/services/simulatorService";
 
 interface SimulationResult {
   totalContributed: number;
@@ -18,8 +19,6 @@ interface ValidationErrors {
   months?: string;
 }
 
-const DEFAULT_INTEREST_RATE_EA = 0.06; // 6% Efectivo Anual
-
 export function useSimulator() {
   const [values, setValues] = useState<SimulatorState>({
     initialAmount: "",
@@ -28,6 +27,8 @@ export function useSimulator() {
   });
 
   const [result, setResult] = useState<SimulationResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Derive validation state during render
   const validationState = useMemo(() => {
@@ -57,7 +58,6 @@ export function useSimulator() {
     // Check logical requirement: at least one input > 0
     if (Number(values.initialAmount) === 0 && Number(values.monthlyContribution) === 0 && values.initialAmount !== "" && values.monthlyContribution !== "") {
          valid = false; 
-         // We might not show error text yet to avoid noise, or we can.
     }
 
     return { errors: newErrors, isValid: valid };
@@ -65,32 +65,29 @@ export function useSimulator() {
 
   const { errors, isValid } = validationState;
 
-  const calculate = useCallback(() => {
+  const calculate = useCallback(async () => {
     if (!isValid) {
       setResult(null);
       return;
     }
 
-    const P = Number(values.initialAmount);
-    const PMT = Number(values.monthlyContribution);
-    const n = Number(values.months);
+    setIsLoading(true);
+    setError(null);
 
-    // Convertir Tasa Efectiva Anual a Mensual
-    const r = Math.pow(1 + DEFAULT_INTEREST_RATE_EA, 1 / 12) - 1;
-
-    // Fórmula de Valor Futuro con Interés Compuesto
-    const futureValueInitial = P * Math.pow(1 + r, n);
-    const futureValueSeries = PMT * ((Math.pow(1 + r, n) - 1) / r);
-    
-    const finalBalance = futureValueInitial + futureValueSeries;
-    const totalContributed = P + (PMT * n);
-    const interestEarned = finalBalance - totalContributed;
-
-    setResult({
-      totalContributed,
-      interestEarned,
-      finalBalance,
-    });
+    try {
+      const data = await simulatorService.calculate({
+        initialAmount: Number(values.initialAmount),
+        monthlyContribution: Number(values.monthlyContribution),
+        months: Number(values.months),
+      });
+      setResult(data);
+    } catch (err) {
+      console.error(err);
+      setError("Error al calcular la simulación. Por favor intente nuevamente.");
+      setResult(null);
+    } finally {
+      setIsLoading(false);
+    }
   }, [values, isValid]);
 
   const setField = (field: keyof SimulatorState, value: string) => {
@@ -98,15 +95,16 @@ export function useSimulator() {
     if (value !== "" && isNaN(Number(value))) return;
     
     setValues((prev) => ({ ...prev, [field]: numValue }));
-    setResult(null); 
   };
 
-  return {
-    values,
-    setField,
-    errors,
-    isValid,
-    result,
+  return { 
+    values, 
+    setField, 
+    errors, 
+    isValid, 
+    result, 
     calculate,
+    isLoading,
+    error
   };
 }

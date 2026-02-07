@@ -1,32 +1,44 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import ProductsPage from "@/app/products/page";
-import { productService } from "@/services/productService";
-import { act } from "react-dom/test-utils";
+import ProductsView from "@/app/products/ProductsView";
 
-// Mock productService
-jest.mock("@/services/productService", () => ({
-  productService: {
-    getProducts: jest.fn(),
-  },
+// Mock useI18n
+jest.mock("@/i18n/I18nContext", () => ({
+  useI18n: () => ({
+    t: {
+      products: {
+        pageTitle: "Nuestros Productos",
+        pageSubtitle: "Encuentra la solución financiera ideal para tus metas.",
+        searchLabel: "Buscar",
+        searchPlaceholder: "Buscar...",
+        filterLabel: "Filtrar",
+        filterAll: "Todos",
+        filterSavings: "Ahorro",
+        filterInvestment: "Inversión",
+        filterChecking: "Corriente",
+        filterCDTs: "CDTs",
+        errorFilter: "Error al filtrar",
+      },
+    },
+  }),
 }));
 
-describe("Products Page", () => {
-  it("renders heading and product list", async () => {
-    // Mock return value
-    const mockProducts = [
-      { id: "1", name: "Cuenta Ahorro", minAmount: 50000, interestRate: 0.05, description: "Desc 1", benefits: [], type: "ahorro" },
-    ];
-    (productService.getProducts as jest.Mock).mockResolvedValue(mockProducts);
+// Mock ProductList if we want shallow rendering, but integration is fine too.
+// Let's keep integration to verify the list renders.
 
-    // Render as a client component
-    render(<ProductsPage />);
+describe("Products View", () => {
+  it("renders heading and product list", async () => {
+    const mockProducts = [
+      { id: "1", name: "Cuenta Ahorro", type: "ahorro", interestRate: 0.05, description: "Desc 1" } as any,
+    ];
+
+    render(<ProductsView initialProducts={mockProducts} />);
 
     expect(screen.getByText("Nuestros Productos")).toBeInTheDocument();
     expect(screen.getByText("Encuentra la solución financiera ideal para tus metas.")).toBeInTheDocument();
     
-    // Check if ProductList rendered (it renders the product name after loading)
+    // Check if ProductList rendered
     await waitFor(() => {
       expect(screen.getByText("Cuenta Ahorro")).toBeInTheDocument();
-    }, { timeout: 2000 });
+    });
   });
 });

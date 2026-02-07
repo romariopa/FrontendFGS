@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 export interface OnboardingData {
   fullName: string;
   document: string;
@@ -13,19 +11,38 @@ export interface SubmissionResponse {
   error?: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 export const submissionService = {
   submit: async (data: OnboardingData): Promise<SubmissionResponse> => {
-    // Simular latencia
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(`${API_URL}/onboarding`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!data.recaptchaToken) {
-      return { success: false, error: "Validación de seguridad fallida." };
+      const result = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          error: result.message || "Error al enviar la solicitud.",
+        };
+      }
+
+      return {
+        success: true,
+        requestId: result.requestId, // Assuming backend returns requestId
+      };
+    } catch (error) {
+      console.error("Submission error:", error);
+      return {
+        success: false,
+        error: "Error de conexión con el servidor.",
+      };
     }
-
-    // Simular éxito
-    return {
-      success: true,
-      requestId: uuidv4(),
-    };
   },
 };

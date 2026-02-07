@@ -103,10 +103,10 @@ export default function ProductList({ initialProducts }: ProductListProps) {
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <div className="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
-            <Inbox className="h-12 w-12 mb-2 opacity-20" />
-            <p className="text-lg font-medium">{t.products.noResults}</p>
-            <p className="text-sm">{t.products.noResultsDesc}</p>
+          <div className="col-span-full text-center py-12 text-gray-500 flex flex-col items-center">
+            <Inbox className="h-12 w-12 text-gray-300 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900">{t.products.noResults}</h3>
+            <p className="mt-1 text-gray-500">{t.products.noResultsDesc}</p>
           </div>
         )}
       </div>

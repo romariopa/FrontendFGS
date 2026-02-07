@@ -1,49 +1,27 @@
 import { Product } from "@/types/product";
-import { v4 as uuidv4 } from "uuid";
 
-// Datos simulados (Mock Data)
-const PRODUCTS_MOCK: Product[] = [
-  {
-    id: uuidv4(),
-    name: "Cuenta Amiga",
-    type: "ahorro",
-    interestRate: 0.05,
-    description: "Tu cuenta de ahorro tradicional sin cuota de manejo.",
-  },
-  {
-    id: uuidv4(),
-    name: "CDT Digital",
-    type: "cdts",
-    interestRate: 11.5,
-    description: "Invierte seguro con tasas garantizadas desde tu celular.",
-  },
-  {
-    id: uuidv4(),
-    name: "Cuenta Pro",
-    type: "corriente",
-    interestRate: 0.01,
-    description: "Maneja tus finanzas con chequera y sobregiro.",
-  },
-  {
-    id: uuidv4(),
-    name: "Ahorro Programado",
-    type: "inversion",
-    interestRate: 8.0,
-    description: "Alcanza tu meta de vivienda con aportes mensuales.",
-  },
-  {
-    id: uuidv4(),
-    name: "Cuenta Joven",
-    type: "ahorro",
-    interestRate: 2.5,
-    description: "Beneficios exclusivos para menores de 25 años.",
-  },
-];
+// Usar 127.0.0.1 en lugar de localhost para evitar problemas de resolución IPv4/IPv6 en Node.js
+const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace("localhost", "127.0.0.1") || "http://127.0.0.1:3000/api";
 
 export const productService = {
   getProducts: async (): Promise<Product[]> => {
-    // Simular latencia de red
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    return PRODUCTS_MOCK;
+    try {
+      console.log(`[ProductService] Fetching products from: ${API_URL}/products`);
+      const response = await fetch(`${API_URL}/products`, {
+        cache: 'no-store' // Asegurar que no cachee respuestas vacías o errores
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error fetching products: ${response.statusText} (${response.status})`);
+      }
+      
+      const data = await response.json();
+      console.log(`[ProductService] Successfully fetched ${data.length} products`);
+      return data;
+    } catch (error) {
+      console.error("[ProductService] Failed to fetch products:", error);
+      // Retornar array vacío para no romper la UI, pero el log ayudará a debuggear
+      return [];
+    }
   },
 };

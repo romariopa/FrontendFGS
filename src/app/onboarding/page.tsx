@@ -107,7 +107,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto py-8">
+    <div className="max-w-xl mx-auto py-6 md:py-8">
       <Card>
         <CardHeader>
           <CardTitle>{t.onboarding.title}</CardTitle>

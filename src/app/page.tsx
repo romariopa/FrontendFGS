@@ -9,12 +9,12 @@ export default function Home() {
   const { t } = useI18n();
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 py-12">
+    <div className="flex flex-col items-center justify-center space-y-6 md:space-y-8 py-8 md:py-12">
       <div className="text-center space-y-4 max-w-2xl">
-        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-blue-900">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight lg:text-5xl text-blue-900">
           {t.home.title}
         </h1>
-        <p className="text-xl text-muted-foreground">
+        <p className="text-lg md:text-xl text-muted-foreground">
           {t.home.subtitle}
         </p>
       </div>

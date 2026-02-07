@@ -56,7 +56,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row gap-4 items-end bg-white p-6 rounded-lg shadow-sm border">
+      <div className="flex flex-col md:flex-row gap-4 md:items-end bg-white p-4 md:p-6 rounded-lg shadow-sm border">
         <div className="w-full md:w-1/2 relative">
           <label className="text-sm font-medium mb-1 block text-gray-700">{t.products.searchLabel}</label>
           <div className="relative">

@@ -46,21 +46,3 @@ export function ProductSkeleton() {
     </Card>
   );
 }
-
-export function ProductSkeleton() {
-  return (
-    <Card className="h-full flex flex-col">
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div className="h-6 w-1/2 bg-gray-200 rounded animate-pulse" />
-          <div className="h-5 w-16 bg-gray-200 rounded-full animate-pulse" />
-        </div>
-        <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse mt-2" />
-      </CardHeader>
-      <CardContent className="mt-auto">
-        <div className="h-8 w-1/4 bg-gray-200 rounded animate-pulse" />
-        <div className="h-3 w-1/3 bg-gray-200 rounded animate-pulse mt-2" />
-      </CardContent>
-    </Card>
-  );
-}

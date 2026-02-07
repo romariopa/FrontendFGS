@@ -13,15 +13,15 @@ export default function SimulatorPage() {
   const { t } = useI18n();
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-blue-900">{t.simulator.title}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-blue-900">{t.simulator.title}</h1>
         <p className="text-muted-foreground">
           {t.simulator.subtitle}
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-6 md:gap-8 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>{t.simulator.contributionsTitle}</CardTitle>

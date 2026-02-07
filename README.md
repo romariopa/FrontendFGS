@@ -2,6 +2,16 @@
 
 Una aplicación web moderna para la simulación de productos financieros y onboarding digital, construida con Next.js 14, TypeScript y Tailwind CSS.
 
+## 🏆 Resumen del Proyecto y Logros Técnicos
+
+Este proyecto ha sido desarrollado siguiendo los más altos estándares de calidad de software, logrando una solución robusta, mantenible y escalable:
+
+-   **Cobertura de Pruebas al 100%:** Se ha implementado una suite de pruebas exhaustiva utilizando Jest y React Testing Library, garantizando que cada componente, hook, servicio y utilidad funcione correctamente bajo diversos escenarios.
+-   **Internacionalización (i18n):** Soporte completo multi-idioma (Español e Inglés) con gestión centralizada de textos y detección dinámica del contexto.
+-   **Clean Architecture:** Separación estricta de responsabilidades entre la interfaz de usuario (UI), la lógica de negocio y los servicios externos.
+-   **Componentes Modulares:** Diseño atómico y reutilizable que facilita el mantenimiento y asegura consistencia visual.
+-   **Validaciones Robustas:** Manejo proactivo de errores y validaciones en tiempo real para ofrecer una experiencia de usuario fluida y segura.
+
 ## 🚀 Cómo ejecutar el proyecto
 
 1.  **Instalar dependencias:**
@@ -27,6 +37,22 @@ El proyecto sigue principios de **Clean Architecture** y modularidad para garant
 -   **`src/hooks`**: Lógica de estado y efectos encapsulada (Custom Hooks).
 -   **`src/utils`**: Funciones puras y helpers.
 -   **`src/types`**: Definiciones de tipos TypeScript compartidas.
+
+## 🌐 Por qué Server-Side Rendering (SSR)?
+
+El proyecto utiliza **Next.js** para aprovechar el **Server-Side Rendering (SSR)** y los **Server Components**, una decisión técnica clave para aplicaciones financieras modernas:
+
+1.  **SEO (Search Engine Optimization):**
+    Al renderizar el HTML en el servidor, los motores de búsqueda pueden indexar el contenido inmediatamente. Esto es crucial para que los productos de ahorro sean descubiertos orgánicamente por los usuarios.
+
+2.  **Rendimiento y Core Web Vitals:**
+    SSR mejora significativamente el *First Contentful Paint (FCP)*. El usuario recibe una página completamente construida desde el servidor, eliminando la espera de carga y ejecución de JavaScript masivo en el cliente.
+
+3.  **Seguridad:**
+    La lógica de negocio sensible y las claves de API privadas se mantienen en el servidor, reduciendo la superficie de ataque y protegiendo la integridad de los datos financieros.
+
+4.  **Experiencia en Dispositivos Móviles:**
+    Al descargar el procesamiento pesado al servidor, la aplicación mantiene un rendimiento fluido incluso en dispositivos con recursos limitados o conexiones inestables.
 
 ## ⚡ Estrategia de Renderizado (ISR)
 

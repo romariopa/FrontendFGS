@@ -12,6 +12,25 @@ Este proyecto ha sido desarrollado siguiendo los más altos estándares de calid
 -   **Componentes Modulares:** Diseño atómico y reutilizable que facilita el mantenimiento y asegura consistencia visual.
 -   **Validaciones Robustas:** Manejo proactivo de errores y validaciones en tiempo real para ofrecer una experiencia de usuario fluida y segura.
 
+## ⚠️ Importante: Orden de Ejecución y Configuración
+
+Para garantizar el correcto funcionamiento del sistema, es **obligatorio** seguir estos pasos:
+
+1.  **Iniciar primero el Backend:** El servidor de API debe estar activo antes de lanzar el frontend.
+2.  **Configurar Variables de Entorno:** Ambos proyectos requieren configuración de entorno.
+
+## 🔑 Variables de Entorno (Frontend)
+
+Crea un archivo `.env.local` en la raíz del proyecto `frontend/` y define las siguientes variables:
+
+```bash
+# URL base de la API del Backend (Asegúrate que coincida con el puerto del backend)
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+
+# Clave de Sitio de Google reCAPTCHA (v2)
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
+```
+
 ## 🚀 Cómo ejecutar el proyecto
 
 1.  **Instalar dependencias:**

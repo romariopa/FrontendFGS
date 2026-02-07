@@ -24,17 +24,19 @@ export default function OnboardingPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [requestId, setRequestId] = useState("");
 
+  const isFormValid = formData.fullName.trim() !== "" &&
+                      formData.document.trim() !== "" &&
+                      formData.email.trim() !== "" &&
+                      formData.recaptchaToken !== "";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+    
     setStatus("loading");
     setErrorMessage("");
 
     try {
-      // Validate Recaptcha
-      if (!formData.recaptchaToken) {
-        throw new Error(t.onboarding.errorRobot);
-      }
-
       const response = await submissionService.submit(formData);
 
       if (response.success && response.requestId) {
@@ -164,7 +166,7 @@ export default function OnboardingPage() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={status === "loading"}>
+            <Button type="submit" className="w-full" disabled={status === "loading" || !isFormValid}>
               {status === "loading" ? (
                 <>
                   <Spinner className="mr-2" />

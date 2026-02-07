@@ -21,7 +21,7 @@ describe("submissionService", () => {
       fullName: "Test User",
       document: "12345",
       email: "test@example.com",
-      recaptchaToken: "INVALID",
+      recaptchaToken: "",
     };
 
     const response = await submissionService.submit(data);

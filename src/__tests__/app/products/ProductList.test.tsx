@@ -54,4 +54,29 @@ describe("ProductList", () => {
       expect(screen.getByText("Beta Investment")).toBeInTheDocument();
     });
   });
+
+  it("handles filtering error", async () => {
+    // Malicious object that mimics an array but throws on filter
+    const maliciousProducts = {
+      length: 1,
+      filter: () => { throw new Error("Filter error"); },
+      map: () => [], // Add map to avoid render crash
+      [Symbol.iterator]: function* () { yield {}; } 
+    } as unknown as Product[];
+
+    // Suppress console.error
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<ProductList initialProducts={maliciousProducts} />);
+
+    // Trigger filter to cause the error
+    const typeSelect = screen.getByRole("combobox");
+    fireEvent.change(typeSelect, { target: { value: "ahorro" } });
+
+    await waitFor(() => {
+      expect(screen.getByText("Ocurrió un error al filtrar los productos.")).toBeInTheDocument();
+    });
+
+    consoleSpy.mockRestore();
+  });
 });

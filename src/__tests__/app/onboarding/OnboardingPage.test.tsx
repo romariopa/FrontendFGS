@@ -16,18 +16,18 @@ describe("OnboardingPage", () => {
 
   it("renders onboarding form", () => {
     render(<OnboardingPage />);
-    expect(screen.getByLabelText(/Nombre Completo/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Documento de Identidad/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Correo Electrónico/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Nombre Completo")).toBeInTheDocument();
+    expect(screen.getByLabelText("Número de Documento")).toBeInTheDocument();
+    expect(screen.getByLabelText("Correo Electrónico")).toBeInTheDocument();
   });
 
   it("shows error if recaptcha is not checked", async () => {
     render(<OnboardingPage />);
     
     // Fill text fields but not recaptcha
-    fireEvent.change(screen.getByLabelText(/Nombre Completo/i), { target: { value: "John Doe" } });
-    fireEvent.change(screen.getByLabelText(/Documento de Identidad/i), { target: { value: "123456" } });
-    fireEvent.change(screen.getByLabelText(/Correo Electrónico/i), { target: { value: "john@example.com" } });
+    fireEvent.change(screen.getByLabelText("Nombre Completo"), { target: { value: "John Doe" } });
+    fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
+    fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
 
     const submitBtn = screen.getByRole("button", { name: /Enviar Solicitud/i });
     fireEvent.click(submitBtn);
@@ -43,9 +43,9 @@ describe("OnboardingPage", () => {
     render(<OnboardingPage />);
 
     // Fill all fields
-    fireEvent.change(screen.getByLabelText(/Nombre Completo/i), { target: { value: "John Doe" } });
-    fireEvent.change(screen.getByLabelText(/Documento de Identidad/i), { target: { value: "123456" } });
-    fireEvent.change(screen.getByLabelText(/Correo Electrónico/i), { target: { value: "john@example.com" } });
+    fireEvent.change(screen.getByLabelText("Nombre Completo"), { target: { value: "John Doe" } });
+    fireEvent.change(screen.getByLabelText("Número de Documento"), { target: { value: "123456" } });
+    fireEvent.change(screen.getByLabelText("Correo Electrónico"), { target: { value: "john@example.com" } });
     
     // Check recaptcha (mocked as a checkbox in the UI)
     const recaptchaCheckbox = screen.getByLabelText(/No soy un robot/i);

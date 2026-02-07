@@ -1,0 +1,81 @@
+export const es = {
+  home: {
+    title: "Tu futuro financiero comienza hoy",
+    subtitle: "Descubre nuestros productos de ahorro, simula tus ganancias y abre tu cuenta en minutos.",
+    productsTitle: "Productos",
+    productsDesc: "Conoce nuestras cuentas de ahorro",
+    productsContent: "Explora tasas competitivas y beneficios exclusivos.",
+    productsBtn: "Ver Productos",
+    simulatorTitle: "Simulador",
+    simulatorDesc: "Proyecta tus ahorros",
+    simulatorContent: "Calcula cuánto puedes ganar con el interés compuesto.",
+    simulatorBtn: "Simular Ahorro",
+    accountTitle: "Abre tu Cuenta",
+    accountDesc: "100% Digital",
+    accountContent: "Proceso rápido y seguro sin filas ni papeleo.",
+    accountBtn: "Comenzar"
+  },
+  onboarding: {
+    title: "Apertura de Cuenta Digital",
+    desc: "Completa tus datos para iniciar el proceso. Es rápido y seguro.",
+    fullName: "Nombre Completo",
+    fullNamePlaceholder: "Como aparece en tu documento",
+    document: "Número de Documento",
+    documentPlaceholder: "Ej. 1234567890",
+    email: "Correo Electrónico",
+    emailPlaceholder: "tucorreo@ejemplo.com",
+    recaptcha: "No soy un robot",
+    submit: "Enviar Solicitud",
+    processing: "Procesando...",
+    successTitle: "¡Solicitud Exitosa!",
+    successDesc: "Hemos recibido tus datos correctamente.",
+    trackingCode: "Tu código de seguimiento es:",
+    confirmationEmail: "Te hemos enviado un correo de confirmación.",
+    backHome: "Volver al inicio",
+    errorRobot: "Por favor verifica que no eres un robot.",
+    errorGeneric: "Error al procesar la solicitud.",
+    errorUnexpected: "Ocurrió un error inesperado."
+  },
+  simulator: {
+    title: "Simulador de Ahorro",
+    subtitle: "Calcula cuánto crecerá tu dinero con nuestra tasa preferencial del 6% E.A.",
+    contributionsTitle: "Tus Aportes",
+    contributionsDesc: "Ingresa los datos de tu plan de ahorro",
+    initialAmount: "Monto Inicial",
+    monthlyContribution: "Aporte Mensual",
+    months: "Plazo (Meses)",
+    calculateBtn: "Calcular Rentabilidad",
+    resultTitle: "Resultado de tu Simulación",
+    emptyState: "Ingresa los datos y calcula tu futuro.",
+    totalContributed: "Total Aportado",
+    interestEarned: "Intereses Ganados",
+    finalBalance: "Saldo Final Estimado",
+    disclaimer: "* Esta proyección es aproximada y no garantiza rentabilidad futura. Tasa usada: 6% E.A."
+  },
+  products: {
+    pageTitle: "Nuestros Productos",
+    pageSubtitle: "Encuentra la solución financiera ideal para tus metas.",
+    searchLabel: "Buscar Producto",
+    searchPlaceholder: "Ej: Cuenta Amiga...",
+    filterLabel: "Tipo de Producto",
+    filterAll: "Todos",
+    filterSavings: "Ahorro",
+    filterInvestment: "Inversión",
+    filterChecking: "Corriente",
+    filterCDTs: "CDTs",
+    errorFilter: "Ocurrió un error al filtrar los productos.",
+    noResults: "No se encontraron productos.",
+    noResultsDesc: "Intenta con otros términos de búsqueda.",
+    ea: "EA",
+    annualRate: "Tasa efectiva anual"
+  },
+  navbar: {
+    brand: "Simulador Ahorro",
+    products: "Productos",
+    simulator: "Simulador",
+    openAccount: "Abrir Cuenta",
+    language: "Idioma"
+  }
+};
+
+export type Translations = typeof es;

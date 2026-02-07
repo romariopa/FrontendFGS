@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
 import { CheckCircle, AlertCircle, ShieldCheck } from "lucide-react";
+import { useI18n } from "@/i18n/I18nContext";
 
 export default function OnboardingPage() {
+  const { t } = useI18n();
   const [formData, setFormData] = useState<OnboardingData>({
     fullName: "",
     document: "",
@@ -29,7 +31,7 @@ export default function OnboardingPage() {
     try {
       // Validate Recaptcha
       if (formData.recaptchaToken !== "OK") {
-        throw new Error("Por favor verifica que no eres un robot.");
+        throw new Error(t.onboarding.errorRobot);
       }
 
       const response = await submissionService.submit(formData);
@@ -38,14 +40,14 @@ export default function OnboardingPage() {
         setRequestId(response.requestId);
         setStatus("success");
       } else {
-        throw new Error(response.error || "Error al procesar la solicitud.");
+        throw new Error(response.error || t.onboarding.errorGeneric);
       }
     } catch (err: unknown) {
       setStatus("error");
       if (err instanceof Error) {
         setErrorMessage(err.message);
       } else {
-        setErrorMessage("Ocurrió un error inesperado.");
+        setErrorMessage(t.onboarding.errorUnexpected);
       }
     }
   };
@@ -78,25 +80,25 @@ export default function OnboardingPage() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <CheckCircle className="h-10 w-10 text-green-600" />
             </div>
-            <CardTitle className="text-2xl text-green-800">¡Solicitud Exitosa!</CardTitle>
+            <CardTitle className="text-2xl text-green-800">{t.onboarding.successTitle}</CardTitle>
             <CardDescription className="text-green-700">
-              Hemos recibido tus datos correctamente.
+              {t.onboarding.successDesc}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-600">
-              Tu código de seguimiento es:
+              {t.onboarding.trackingCode}
             </p>
             <div className="bg-white p-3 rounded border border-green-200 font-mono text-lg font-bold text-gray-800 select-all">
               {requestId}
             </div>
             <p className="text-xs text-gray-500">
-              Te hemos enviado un correo de confirmación.
+              {t.onboarding.confirmationEmail}
             </p>
           </CardContent>
           <CardFooter>
             <Button className="w-full bg-green-600 hover:bg-green-700" onClick={resetForm}>
-              Volver al inicio
+              {t.onboarding.backHome}
             </Button>
           </CardFooter>
         </Card>
@@ -108,17 +110,17 @@ export default function OnboardingPage() {
     <div className="max-w-xl mx-auto py-8">
       <Card>
         <CardHeader>
-          <CardTitle>Apertura de Cuenta Digital</CardTitle>
+          <CardTitle>{t.onboarding.title}</CardTitle>
           <CardDescription>
-            Completa tus datos para iniciar el proceso. Es rápido y seguro.
+            {t.onboarding.desc}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <Input
-                label="Nombre Completo"
-                placeholder="Como aparece en tu documento"
+                label={t.onboarding.fullName}
+                placeholder={t.onboarding.fullNamePlaceholder}
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 required
@@ -126,8 +128,8 @@ export default function OnboardingPage() {
               />
               
               <Input
-                label="Número de Documento"
-                placeholder="Ej. 1234567890"
+                label={t.onboarding.document}
+                placeholder={t.onboarding.documentPlaceholder}
                 value={formData.document}
                 onChange={(e) => setFormData({ ...formData, document: e.target.value })}
                 required
@@ -135,9 +137,9 @@ export default function OnboardingPage() {
               />
               
               <Input
-                label="Correo Electrónico"
+                label={t.onboarding.email}
                 type="email"
-                placeholder="tucorreo@ejemplo.com"
+                placeholder={t.onboarding.emailPlaceholder}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
@@ -156,7 +158,7 @@ export default function OnboardingPage() {
                 />
                 <label htmlFor="recaptcha" className="text-sm text-gray-700 font-medium cursor-pointer flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-blue-600" />
-                  No soy un robot
+                  {t.onboarding.recaptcha}
                 </label>
                 {/* Campo oculto real */}
                 <input type="hidden" name="recaptchaToken" value={formData.recaptchaToken} />
@@ -174,10 +176,10 @@ export default function OnboardingPage() {
               {status === "loading" ? (
                 <>
                   <Spinner className="mr-2" />
-                  Procesando...
+                  {t.onboarding.processing}
                 </>
               ) : (
-                "Enviar Solicitud"
+                t.onboarding.submit
               )}
             </Button>
           </form>

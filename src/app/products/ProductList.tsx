@@ -5,13 +5,15 @@ import { Product } from "@/types/product";
 import { Input } from "@/components/ui/Input";
 import { ProductCard, ProductSkeleton } from "./ProductCard";
 import { useDebounce } from "@/hooks/useDebounce";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Inbox } from "lucide-react";
+import { useI18n } from "@/i18n/I18nContext";
 
 interface ProductListProps {
   initialProducts: Product[];
 }
 
 export default function ProductList({ initialProducts }: ProductListProps) {
+  const { t } = useI18n();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -43,24 +45,24 @@ export default function ProductList({ initialProducts }: ProductListProps) {
 
         setProducts(filtered);
       } catch {
-        setError("Ocurrió un error al filtrar los productos.");
+        setError(t.products.errorFilter);
       } finally {
         setLoading(false);
       }
     };
 
     filterProducts();
-  }, [debouncedSearch, filterType, initialProducts]);
+  }, [debouncedSearch, filterType, initialProducts, t.products.errorFilter]);
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row gap-4 items-end bg-white p-6 rounded-lg shadow-sm border">
         <div className="w-full md:w-1/2 relative">
-          <label className="text-sm font-medium mb-1 block text-gray-700">Buscar Producto</label>
+          <label className="text-sm font-medium mb-1 block text-gray-700">{t.products.searchLabel}</label>
           <div className="relative">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <Input
-              placeholder="Ej: Cuenta Amiga..."
+              placeholder={t.products.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9"
@@ -69,7 +71,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
         </div>
         
         <div className="w-full md:w-1/4">
-          <label className="text-sm font-medium mb-1 block text-gray-700">Tipo de Producto</label>
+          <label className="text-sm font-medium mb-1 block text-gray-700">{t.products.filterLabel}</label>
           <div className="relative">
             <Filter className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
             <select
@@ -77,11 +79,11 @@ export default function ProductList({ initialProducts }: ProductListProps) {
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
             >
-              <option value="all">Todos</option>
-              <option value="ahorro">Ahorro</option>
-              <option value="inversion">Inversión</option>
-              <option value="corriente">Corriente</option>
-              <option value="cdts">CDTs</option>
+              <option value="all">{t.products.filterAll}</option>
+              <option value="ahorro">{t.products.filterSavings}</option>
+              <option value="inversion">{t.products.filterInvestment}</option>
+              <option value="corriente">{t.products.filterChecking}</option>
+              <option value="cdts">{t.products.filterCDTs}</option>
             </select>
           </div>
         </div>
@@ -101,9 +103,10 @@ export default function ProductList({ initialProducts }: ProductListProps) {
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <div className="col-span-full text-center py-12 text-gray-500">
-            <p className="text-lg font-medium">No se encontraron productos.</p>
-            <p className="text-sm">Intenta con otros términos de búsqueda.</p>
+          <div className="col-span-full flex flex-col items-center justify-center py-12 text-gray-500">
+            <Inbox className="h-12 w-12 mb-2 opacity-20" />
+            <p className="text-lg font-medium">{t.products.noResults}</p>
+            <p className="text-sm">{t.products.noResultsDesc}</p>
           </div>
         )}
       </div>

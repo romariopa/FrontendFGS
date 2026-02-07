@@ -1,0 +1,81 @@
+import { Translations } from "./es";
+
+export const en: Translations = {
+  home: {
+    title: "Your financial future starts today",
+    subtitle: "Discover our savings products, simulate your earnings, and open your account in minutes.",
+    productsTitle: "Products",
+    productsDesc: "Meet our savings accounts",
+    productsContent: "Explore competitive rates and exclusive benefits.",
+    productsBtn: "View Products",
+    simulatorTitle: "Simulator",
+    simulatorDesc: "Project your savings",
+    simulatorContent: "Calculate how much you can earn with compound interest.",
+    simulatorBtn: "Simulate Savings",
+    accountTitle: "Open your Account",
+    accountDesc: "100% Digital",
+    accountContent: "Fast and secure process without lines or paperwork.",
+    accountBtn: "Start Now"
+  },
+  onboarding: {
+    title: "Digital Account Opening",
+    desc: "Complete your details to start the process. It's fast and secure.",
+    fullName: "Full Name",
+    fullNamePlaceholder: "As it appears on your ID",
+    document: "Document Number",
+    documentPlaceholder: "Ex. 1234567890",
+    email: "Email Address",
+    emailPlaceholder: "youremail@example.com",
+    recaptcha: "I am not a robot",
+    submit: "Submit Application",
+    processing: "Processing...",
+    successTitle: "Application Successful!",
+    successDesc: "We have received your details correctly.",
+    trackingCode: "Your tracking code is:",
+    confirmationEmail: "We have sent you a confirmation email.",
+    backHome: "Back to Home",
+    errorRobot: "Please verify that you are not a robot.",
+    errorGeneric: "Error processing request.",
+    errorUnexpected: "An unexpected error occurred."
+  },
+  simulator: {
+    title: "Savings Simulator",
+    subtitle: "Calculate how much your money will grow with our preferential rate of 6% E.A.",
+    contributionsTitle: "Your Contributions",
+    contributionsDesc: "Enter your savings plan details",
+    initialAmount: "Initial Amount",
+    monthlyContribution: "Monthly Contribution",
+    months: "Term (Months)",
+    calculateBtn: "Calculate Profitability",
+    resultTitle: "Simulation Result",
+    emptyState: "Enter data and calculate your future.",
+    totalContributed: "Total Contributed",
+    interestEarned: "Interest Earned",
+    finalBalance: "Estimated Final Balance",
+    disclaimer: "* This projection is approximate and does not guarantee future profitability. Rate used: 6% E.A."
+  },
+  products: {
+    pageTitle: "Our Products",
+    pageSubtitle: "Find the ideal financial solution for your goals.",
+    searchLabel: "Search Product",
+    searchPlaceholder: "Ex: Friendly Account...",
+    filterLabel: "Product Type",
+    filterAll: "All",
+    filterSavings: "Savings",
+    filterInvestment: "Investment",
+    filterChecking: "Checking",
+    filterCDTs: "CDTs",
+    errorFilter: "An error occurred while filtering products.",
+    noResults: "No products found.",
+    noResultsDesc: "Try other search terms.",
+    ea: "E.A.",
+    annualRate: "Effective Annual Rate"
+  },
+  navbar: {
+    brand: "Savings Simulator",
+    products: "Products",
+    simulator: "Simulator",
+    openAccount: "Open Account",
+    language: "Language"
+  }
+};

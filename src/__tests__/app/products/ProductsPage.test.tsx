@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import ProductsPage from "@/app/products/page";
 import { productService } from "@/services/productService";
+import { act } from "react-dom/test-utils";
 
 // Mock productService
 jest.mock("@/services/productService", () => ({
@@ -17,9 +18,8 @@ describe("Products Page", () => {
     ];
     (productService.getProducts as jest.Mock).mockResolvedValue(mockProducts);
 
-    // Call the async component directly
-    const jsx = await ProductsPage();
-    render(jsx);
+    // Render as a client component
+    render(<ProductsPage />);
 
     expect(screen.getByText("Nuestros Productos")).toBeInTheDocument();
     expect(screen.getByText("Encuentra la solución financiera ideal para tus metas.")).toBeInTheDocument();

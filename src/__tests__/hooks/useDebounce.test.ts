@@ -1,0 +1,34 @@
+import { renderHook, act } from "@testing-library/react";
+import { useDebounce } from "@/hooks/useDebounce";
+
+jest.useFakeTimers();
+
+describe("useDebounce", () => {
+  it("returns initial value immediately", () => {
+    const { result } = renderHook(() => useDebounce("test", 500));
+    expect(result.current).toBe("test");
+  });
+
+  it("debounces value updates", () => {
+    const { result, rerender } = renderHook(
+      ({ value, delay }) => useDebounce(value, delay),
+      { initialProps: { value: "initial", delay: 500 } }
+    );
+
+    expect(result.current).toBe("initial");
+
+    // Update value
+    rerender({ value: "updated", delay: 500 });
+
+    // Should still be initial
+    expect(result.current).toBe("initial");
+
+    // Fast-forward time
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    // Should be updated now
+    expect(result.current).toBe("updated");
+  });
+});

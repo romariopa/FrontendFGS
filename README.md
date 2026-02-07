@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Simulador del Ahorro Digital
 
-## Getting Started
+Una aplicación web moderna para la simulación de productos financieros y onboarding digital, construida con Next.js 14, TypeScript y Tailwind CSS.
 
-First, run the development server:
+## 🚀 Cómo ejecutar el proyecto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2.  **Iniciar servidor de desarrollo:**
+    ```bash
+    npm run dev
+    ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3.  **Abrir en el navegador:**
+    Visita [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗 Arquitectura
 
-## Learn More
+El proyecto sigue principios de **Clean Architecture** y modularidad para garantizar escalabilidad y mantenibilidad:
 
-To learn more about Next.js, take a look at the following resources:
+-   **`src/app`**: Rutas y páginas (App Router). Separación clara entre Server Components y Client Components.
+-   **`src/components`**: Componentes de UI reutilizables y atómicos (Button, Input, Card).
+-   **`src/services`**: Capa de acceso a datos y lógica de negocio externa (API mocks).
+-   **`src/hooks`**: Lógica de estado y efectos encapsulada (Custom Hooks).
+-   **`src/utils`**: Funciones puras y helpers.
+-   **`src/types`**: Definiciones de tipos TypeScript compartidas.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚡ Estrategia de Renderizado (ISR)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para la sección de **Productos (`/products`)**, hemos implementado **Incremental Static Regeneration (ISR)**.
 
-## Deploy on Vercel
+### ¿Por qué ISR?
+-   **Rendimiento:** La página se sirve estáticamente (HTML pre-generado), lo que garantiza tiempos de carga casi instantáneos (TTFB bajo).
+-   **SEO:** El contenido está disponible para los motores de búsqueda sin necesidad de ejecución de JS en el cliente.
+-   **Datos Frescos:** A diferencia de SSG puro, definimos un `revalidate = 60`. Esto significa que Next.js regenerará la página en segundo plano si ha pasado más de 1 minuto desde la última solicitud, asegurando que la información de los productos (tasas, descripciones) se mantenga actualizada sin reconstruir todo el sitio.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💰 Fórmula del Simulador
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El simulador utiliza la fórmula de valor futuro para una serie de pagos con interés compuesto (anualidad vencida):
+
+**Fórmula:**
+$$ VF = P(1+r)^n + PMT \times \frac{(1+r)^n - 1}{r} $$
+
+Donde:
+-   **$VF$**: Valor Futuro (Saldo Final).
+-   **$P$**: Monto Inicial (Capital).
+-   **$PMT$**: Aporte Mensual.
+-   **$n$**: Número de meses (Plazo).
+-   **$r$**: Tasa de interés mensual efectiva.
+
+*Nota: La tasa anual (E.A.) del 6% se convierte a mensual efectiva antes del cálculo.*
+
+## 🛡️ Seguridad y Validaciones
+
+-   **Onboarding:** Implementación de un mecanismo de validación de token simulado ("No soy un robot") para prevenir envíos automatizados.
+-   **Tipado Estricto:** TypeScript se utiliza en todo el proyecto para prevenir errores en tiempo de ejecución.
+-   **Validación de Formularios:** Feedback visual inmediato y estados de error controlados.
+
+---
+
+Desarrollado con ❤️ pensando en la mejor experiencia bancaria digital.
